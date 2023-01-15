@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "take-a-screenshot",
+    "slug": "snack-8537ea8e-8a6b-460a-a78f-c9d637428810",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./asset/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./asset/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./asset/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}

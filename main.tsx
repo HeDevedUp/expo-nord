@@ -39,7 +39,6 @@ export default function Main() {
       <NavigationContainer>
 
         {user ? <BottomNavigation /> : <OnboardingNavigation />}
-        {/* <OnboardingNavigation /> */}
       </NavigationContainer>
     </SafeAreaProvider>
   );

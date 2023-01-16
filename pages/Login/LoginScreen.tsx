@@ -1,7 +1,7 @@
 
 
 
-import React, { useState } from 'react'
+import React, { useState, memo } from 'react'
 import {
   Text,
   View,
@@ -19,12 +19,12 @@ import BackButton from "../../components/BackButton";
 import { theme } from "../../core/theme";
 import { emailValidator, passwordValidator } from "../../core/utils";
 import { Navigation } from "../../types";
-// import { loginUser } from "../../api/auth-api";
+import { loginUser } from "../../api/auth-api";
 import Toast from "../../components/Toast";
 
 // import AsyncStorage from '@react-native-async-storage/async-storage'
 import '../../config/firebase'
-import { styles } from './LoginScreenStyles'
+// import { styles } from './LoginScreenStyles'
 import { StackScreenProps } from "@react-navigation/stack";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
@@ -33,109 +33,110 @@ const auth = getAuth();
 
 
 const LoginScreen = () => {
+  const [email, setEmail] = useState({ value: "", error: "" });
+  const [password, setPassword] = useState({ value: "", error: "" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigation = useNavigation();
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const _onLoginPressed = async () => {
+    if (loading) return;
 
-  const forgotPassword = async () => {
-    if (email === "") {
-      Alert.alert("Email and password are mandatory.");
-    }
-    else {
-      sendPasswordResetEmail(auth, email)
-        .then(() => {
-          Alert.alert("reset email sent to " + email);
-        })
-        .catch((e) => {
-          Alert.alert("Something went wrong, try again!!");
-          console.log(e)
-        });
-    }
-  }
+    const emailError = emailValidator(email.value);
+    const passwordError = passwordValidator(password.value);
 
-  const handleSignIn = async () => {
-    if (email === '' || password === '') {
-      Alert.alert('Email and password are mandatory.')
-
+    if (emailError || passwordError) {
+      setEmail({ ...email, error: emailError });
+      setPassword({ ...password, error: passwordError });
       return;
     }
-    else {
-      try {
-        await signInWithEmailAndPassword(auth, email, password)
-          .then(() => {
-            Alert.alert("logged in " + email);
-          });
-        console.log('Signed in');
-      } catch (error) {
-        console.log("hi");
-      }
-    }
-  }
 
+    setLoading(true);
+
+    const response = await loginUser({
+      email: email.value,
+      password: password.value
+    });
+
+    if (response.error) {
+      setError(response.error);
+    }
+
+    setLoading(false);
+  };
 
   return (
-    <KeyboardAvoidingView behavior='padding' style={styles.container}>
+    <Background>
+      <BackButton goBack={() => navigation.navigate("HomeScreen")} />
 
+      <Logo />
 
+      <Header>Welcome back.</Header>
 
-      <Background>
-        <BackButton goBack={() => navigation.navigate("HomeScreen")} />
+      <TextInput
+        label="Email"
+        returnKeyType="next"
+        value={email.value}
+        onChangeText={text => setEmail({ value: text, error: "" })}
+        error={!!email.error}
+        errorText={email.error}
+        autoCapitalize="none"
+        autoCompleteType="email"
+        textContentType="emailAddress"
+        keyboardType="email-address"
+      />
 
-        <Logo />
-        <Header>Welcome back.</Header>
+      <TextInput
+        label="Password"
+        returnKeyType="done"
+        value={password.value}
+        onChangeText={text => setPassword({ value: text, error: "" })}
+        error={!!password.error}
+        errorText={password.error}
+        secureTextEntry
+        autoCapitalize="none"
+      />
 
-        <TextInput
-          label="Email"
-          returnKeyType="next"
-          value={email.value}
-          onChangeText={text => setEmail({ value: text, error: "" })}
-          error={!!email.error}
-          errorText={email.error}
-          autoCapitalize="none"
-          autoCompleteType="email"
-          textContentType="emailAddress"
-          keyboardType="email-address"
-        />
-        <TextInput
-          label="Password"
-          returnKeyType="done"
-          value={password.value}
-          onChangeText={text => setPassword({ value: text, error: "" })}
-          error={!!password.error}
-          errorText={password.error}
-          secureTextEntry
-          autoCapitalize="none"
-        />
-
-        <View style={styles.forgotPassword}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("ForgotPasswordScreen")}
-          >
-            <Text style={styles.label}>Forgot your password?</Text>
-          </TouchableOpacity>
-        </View>
-        <Button
-          // loading={loading}
-          mode="contained"
-          onPress={() => navigation.navigate('Dashboard')}
+      <View style={styles.forgotPassword}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("ForgotPasswordScreen")}
         >
-          Login
-        </Button>
+          <Text style={styles.label}>Forgot your password?</Text>
+        </TouchableOpacity>
+      </View>
 
-        <View style={styles.row}>
-          <Text style={styles.label}>Don’t have an account? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
-            <Text style={styles.link}>Sign up</Text>
-          </TouchableOpacity>
-        </View>
+      <Button loading={loading} mode="contained" onPress={_onLoginPressed}>
+        Login
+      </Button>
 
-        {/* <Toast message={error} onDismiss={() => setError("")} /> */}
+      <View style={styles.row}>
+        <Text style={styles.label}>Don’t have an account? </Text>
+        <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+          <Text style={styles.link}>Sign up</Text>
+        </TouchableOpacity>
+      </View>
 
+      <Toast message={error} onDismiss={() => setError("")} />
+    </Background>
+  );
+};
 
+const styles = StyleSheet.create({
+  forgotPassword: {
+    width: "100%",
+    alignItems: "flex-end",
+    marginBottom: 24
+  },
+  row: {
+    flexDirection: "row",
+    marginTop: 4
+  },
+  label: {
+    color: theme.colors.secondary
+  },
+  link: {
+    fontWeight: "bold",
+    color: theme.colors.primary
+  }
+});
 
-      </Background>
-    </KeyboardAvoidingView>
-  )
-}
-
-export default LoginScreen
+export default memo(LoginScreen);

@@ -8,6 +8,8 @@ import TextInput from "../../components/TextInput";
 import BackButton from "../../components/BackButton";
 import { theme } from "../../core/theme";
 import { Navigation } from "../../types";
+import { useNavigation, } from '@react-navigation/native';
+
 import {
   emailValidator,
   passwordValidator,
@@ -20,22 +22,25 @@ type Props = {
   navigation: Navigation;
 };
 
-const RegisterScreen = ({ navigation }: Props) => {
+const RegisterScreen = () => {
+
   const [name, setName] = useState({ value: "", error: "" });
   const [email, setEmail] = useState({ value: "", error: "" });
   const [password, setPassword] = useState({ value: "", error: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const navigation = useNavigation()
+
 
   const _onSignUpPressed = async () => {
     if (loading) return;
 
-    const nameError = nameValidator(name.value);
+    // const nameError = nameValidator(name.value);
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
 
-    if (emailError || passwordError || nameError) {
-      setName({ ...name, error: nameError });
+    if (emailError || passwordError) {
+      // setName({ ...name, error: nameError });
       setEmail({ ...email, error: emailError });
       setPassword({ ...password, error: passwordError });
       return;
@@ -44,7 +49,7 @@ const RegisterScreen = ({ navigation }: Props) => {
     setLoading(true);
 
     const response = await signInUser({
-      name: name.value,
+      // name: name.value,
       email: email.value,
       password: password.value
     });
@@ -64,14 +69,14 @@ const RegisterScreen = ({ navigation }: Props) => {
 
       <Header>Create Account</Header>
 
-      <TextInput
+      {/* <TextInput
         label="Name"
         returnKeyType="next"
         value={name.value}
         onChangeText={text => setName({ value: text, error: "" })}
         error={!!name.error}
         errorText={name.error}
-      />
+      /> */}
 
       <TextInput
         label="Email"
@@ -98,9 +103,9 @@ const RegisterScreen = ({ navigation }: Props) => {
       />
 
       <Button
-        // loading={loading}
+        loading={loading}
         mode="contained"
-        // onPress={_onSignUpPressed}
+        onPress={_onSignUpPressed}
         style={styles.button}
       >
         Sign Up
@@ -108,7 +113,7 @@ const RegisterScreen = ({ navigation }: Props) => {
 
       <View style={styles.row}>
         <Text style={styles.label}>Already have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+        <TouchableOpacity onPress={() => { navigation.navigate("SignIn") }}>
           <Text style={styles.link}>Login</Text>
         </TouchableOpacity>
       </View>
@@ -136,114 +141,3 @@ const styles = StyleSheet.create({
 });
 
 export default memo(RegisterScreen);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useState } from 'react'
-// import {
-//      KeyboardAvoidingView,
-//   TouchableOpacity,
-//   TextInput,
-//   Text,
-//   Alert,
-//   View,
-// } from "react-native";
-// import AsyncStorage from '@react-native-async-storage/async-storage'
-// import { Button } from '../../components/MyButton'
-// import '../../config/firebase'
-// import { styles } from './RegisterScreenStyles'
-// import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-// import { addDoc, collection,doc,getFirestore, initializeFirestore, serverTimestamp, setDoc } from 'firebase/firestore';
-
-// const auth = getAuth();
-// const db = getFirestore()
-// const colRef = collection(db, 'users')
-
-
-// const RegisterScreen = () => {
-//   const [email, setEmail] = useState('')
-//   const [password, setPassword] = useState('')
-
-
-//   const handleSignUp = async() => {
-//     if (email === '' || password === '') {
-//      Alert.alert('Email and password are mandatory.')
-//       return;
-//     }
-//     else {
-//       try {
-//         await createUserWithEmailAndPassword(auth, email, password).
-//         then(cred => {
-//         console.log(cred.user.uid);
-//         console.log(cred.user.email);
-
-//           addDoc(colRef, {
-//           user_id: cred.user.uid,
-//           email: cred.user.email,
-//           })
-//         })
-//       }
-//       catch {
-//         return;
-//       }
-//     }
-//   }
-//     return (
-//       <KeyboardAvoidingView
-//       style={styles.container}
-//       behavior="padding"
-//       >
-//         <View style={styles.inputContainer}>
-//           <TextInput
-//           placeholder="Email"
-//           value={email}
-//           onChangeText={text => setEmail(text)}
-//           style={styles.input}
-//           />
-//           <TextInput
-//           placeholder="Password"
-//           value={password}
-//           onChangeText={text => setPassword(text)}
-//           style={styles.input}
-//           secureTextEntry
-//           />
-//         </View>
-
-//         <View style={styles.buttonContainer}>
-//           <TouchableOpacity
-//           onPress={handleSignUp}
-//           style={styles.button}
-//           >
-//             <Text style={styles.buttonText}>Register</Text>
-//           </TouchableOpacity>
-//           <Text style={styles.outlineText}>
-//             Already Have an account? {" ->> "}
-//           </Text>
-//         </View>
-//       </KeyboardAvoidingView>
-//     )
-// }
-
-// export default RegisterScreen

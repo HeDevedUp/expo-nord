@@ -7,6 +7,7 @@ export const theme = {
     primary: "#F6820D",
     secondary: "#414757",
     error: "#f13a59",
-    success: "#00B386"
+    success: "#00B386",
+    gray: "C5C5C7"
   }
 };

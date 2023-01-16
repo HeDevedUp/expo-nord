@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
-import TextInput from "../../components/TextInput"; 
+import TextInput from "../../components/TextInput";
 import Toast from "../../components/Toast";
 const CalculatorScreen = () => {
     const [result, setResult] = useState('');
@@ -34,7 +34,7 @@ const CalculatorScreen = () => {
       const handleOperatorPress = async (operator: string) => {
         // console.log(JSON.stringify({ numberOne, numberTwo, operator }));
         try {
-            const response = await fetch('https://nordstone.vercel.app/calculate', {
+            const response = await fetch('https://nordstone-main.vercel.app/calculate', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ const CalculatorScreen = () => {
             setNumberOne(text.replace(/[^0-9]/g, ''))
           }}
       />
-        <TextInput 
+        <TextInput
           placeholder="Second Number"
           keyboardType="numeric"
           onChangeText={(text)=> {

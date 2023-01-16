@@ -1,17 +1,18 @@
-import firebase from "firebase/app";
-import "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, } from 'firebase/auth'
+import { auth } from "../config/firebase";
 import { AuthDetails } from "../types";
 
+
 export const logoutUser = () => {
-  firebase.auth().signOut();
+  auth.signOut();
 };
 
-export const signInUser = async ({ name, email, password }: AuthDetails) => {
+export const signInUser = async ({ email, password }: AuthDetails) => {
   try {
-    await firebase.auth().createUserWithEmailAndPassword(email, password);
-    firebase.auth().currentUser.updateProfile({
-      displayName: name
-    });
+    await createUserWithEmailAndPassword(auth, email, password)
+    // firebase.auth().currentUser.updateProfile({
+    // displayName: name
+    // });
 
     return {};
   } catch (error) {
@@ -42,7 +43,7 @@ export const signInUser = async ({ name, email, password }: AuthDetails) => {
 
 export const loginUser = async ({ email, password }: AuthDetails) => {
   try {
-    await firebase.auth().signInWithEmailAndPassword(email, password);
+    await signInWithEmailAndPassword(auth, email, password);
     return {};
   } catch (error) {
     switch (error.code) {
@@ -69,7 +70,7 @@ export const loginUser = async ({ email, password }: AuthDetails) => {
 
 export const sendEmailWithPassword = async (email: string) => {
   try {
-    await firebase.auth().sendPasswordResetEmail(email);
+    // await auth.sendPasswordResetEmail(email);
     return {};
   } catch (error) {
     switch (error.code) {

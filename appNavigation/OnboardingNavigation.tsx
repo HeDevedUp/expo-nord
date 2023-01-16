@@ -12,10 +12,8 @@ const OnboardingNavigation = () => {
   return (
     <onboardingStack.Navigator
       screenOptions={{ headerShown: false }}>
-      {/* <Stack.Screen name="Welcome" component={SplashScreen} /> */}
-      <onboardingStack.Screen name="SignUp" component={LoginScreen} />
       <onboardingStack.Screen name="SignIn" component={RegisterScreen} />
-      {/* <onboardingStack.Screen name='Dashboard' component={BottomNavigation} /> */}
+      <onboardingStack.Screen name="SignUp" component={LoginScreen} />
 
     </onboardingStack.Navigator>
   );

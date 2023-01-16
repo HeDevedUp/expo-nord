@@ -96,7 +96,7 @@ const PictureScreen = ({ navigation }: Props) => {
 
       <BackButton goBack={() => navigation.navigate("Notify")} />
 
-      return (
+
       <View style={styles.container}>
 
         <View style={styles.space}>
@@ -110,14 +110,7 @@ const PictureScreen = ({ navigation }: Props) => {
           <Image style={styles.imageStyle} source={{ uri: galleryPhoto }} />
         </View>
       </View>
-      );
-};
-
-
-
-
-
-
+    </Background>
 
       {/* <Button
         // loading={loading}
@@ -133,18 +126,16 @@ const PictureScreen = ({ navigation }: Props) => {
         onPress={handleUpload}
       >
         Select From Gallery
-      </Button>
-      {/* <Button
+      </Button> */}
+
+  {/* <Button
         // loading={loading}
         mode="contained"
         // onPress={_onSignUpPressed}
         style={styles.button}
       >
         Upload
-      </Button> */} */}
-
-
-    </Background>
+      </Button> */}
   );
 };
 

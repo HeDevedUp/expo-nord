@@ -19,11 +19,11 @@ import { AuthUserProvider } from './contexts/Context'
 export default function App() {
 
     return (
-        <>
+
             <AuthUserProvider>
                 <Main />
             </AuthUserProvider>
-        </>
+     
     )
 
 };
